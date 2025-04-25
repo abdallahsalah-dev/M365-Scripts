@@ -15,6 +15,9 @@
     and Internet Message ID, and displays the results in an interactive grid.
 #>
 
+# Connect to ExchangeOnline Module
+Connect-ExchangeOnline
+
 ﻿# Display a message to indicate the script's purpose
 Write-Host "Searching Office 365 Audit Records to find MailItemAccessed (Last 90 Days)" -ForegroundColor Green
 
