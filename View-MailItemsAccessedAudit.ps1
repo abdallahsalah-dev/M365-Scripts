@@ -1,3 +1,20 @@
+<#
+    Copyright (c) 2025 Abdallah Salah
+    All Rights Reserved.
+
+    This script is part of the Microsoft365-Scripts repository on GitHub.
+    Repository URL: https://github.com/abdallahsalah-dev/M365-Scripts
+
+    Licensed under the MIT License.
+    You may obtain a copy of the License at:
+    https://opensource.org/licenses/MIT
+
+    Author: Abdallah Salah
+    Description:   This script searches Office 365 Audit Logs for "MailItemsAccessed" events . It extracts 
+    relevant details such as the timestamp, user ID, client IP, folder path, 
+    and Internet Message ID, and displays the results in an interactive grid.
+#>
+
 ﻿# Display a message to indicate the script's purpose
 Write-Host "Searching Office 365 Audit Records to find MailItemAccessed (Last 90 Days)" -ForegroundColor Green
 
