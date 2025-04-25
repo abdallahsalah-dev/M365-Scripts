@@ -13,7 +13,9 @@
     Description: PowerShell script to export compliance search results by message ID.
 #>
 
-﻿
+# Connect to SC Module
+Connect-IPPSSession
+
 # List of Message IDs to include in the search
 $MessageIds = @(
     "<ea3cf85d-cc63-409b-bf11-58fab4e6f1ac@az.westus.microsoft.com>",
