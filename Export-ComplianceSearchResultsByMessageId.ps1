@@ -1,3 +1,18 @@
+<#
+    Copyright (c) 2025 Abdallah Salah
+    All Rights Reserved.
+
+    This script is part of the Microsoft365-Scripts repository on GitHub.
+    Repository URL: https://github.com/abdallahsalah-dev/M365-Scripts
+
+    Licensed under the MIT License.
+    You may obtain a copy of the License at:
+    https://opensource.org/licenses/MIT
+
+    Author: Abdallah Salah
+    Description: PowerShell script to export compliance search results by message ID.
+#>
+
 ﻿
 # List of Message IDs to include in the search
 $MessageIds = @(
