@@ -10,7 +10,19 @@
     https://opensource.org/licenses/MIT
 
     Author: Abdallah Salah
-    Description: This PowerShell script uses Microsoft Graph API to remove simulation-related emails and reminders from users' mailboxes. It targets messages from a specific sender (notification@attacksimulationtraining.com) and deletes them across the organization or specific users. The script requires the Mail.ReadWrite permission and is intended as a workaround for handling canceled simulations and their associated notifications..
+    
+    Description: This PowerShell script uses Microsoft Graph API to remove simulation-related emails and reminders from users' mailboxes. It targets messages from a specific sender (notification@attacksimulationtraining.com) and 
+    deletes them across the organization or specific users. The script requires the Mail.ReadWrite permission and is intended as a workaround for handling canceled simulations and their associated notifications..
+
+    Script Hints:
+    Target Specific Users: The script can be customized to target specific users by modifying the $users array. For example, instead of processing all users, you can specify particular email addresses to remove simulation emails from.
+    
+    Example:
+
+ $users = @(
+    "user1@example.com",
+    "user2@example.com"
+           )
 #>
 
 # Define sender email
