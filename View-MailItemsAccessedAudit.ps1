@@ -15,41 +15,53 @@
     and Internet Message ID, and displays the results in an interactive grid.
 #>
 
-# Connect to Exchange Online
+# Connect to Exchange Online (prompts for authentication if not connected)
 Connect-ExchangeOnline
 
 # Display a message to indicate the script's purpose
-Write-Host "Searching Office 365 Audit Records to find MailItemAccessed (Last 90 Days)" -ForegroundColor Green
+Write-Host "Searching Office 365 Audit Records to find MailItemsAccessed (Last 90 Days)" -ForegroundColor Green
 
-# Suppress non-terminating errors to keep output clean
+# Suppress non-terminating errors to keep the output clean
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Define the date range: from 90 days ago until today
 $EndDate = Get-Date
 $StartDate = $EndDate.AddDays(-90)
 
-# Perform the audit log search for the "MailItemsAccessed" operation
-# Filtering results to only those related to "admin@hybrid-pro.net"
-$Records = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -Operations MailItemsAccessed -Formatted -FreeText admin@hybrid-pro.net
+# Define the attacker IP address to use as filter for the audit log search
+$AttackerIP = "1.2.3.4"  # <--- Replace this with the actual attacker IP address
 
-# Check if records were returned
+# Search Unified Audit Log for MailItemsAccessed events filtered by the attacker IP
+$Records = Search-UnifiedAuditLog `
+    -StartDate $StartDate `
+    -EndDate $EndDate `
+    -Operations MailItemsAccessed `
+    -Formatted `
+    -FreeText $AttackerIP
+
+# Check if any records were found
 if (-not $Records) {
-    Write-Host "No MailItemsAccessed records found for the specified period." -ForegroundColor Yellow
+    Write-Host "No MailItemsAccessed records found for the specified IP address in the last 90 days." -ForegroundColor Yellow
     return
 }
 
-# Process each record and extract relevant properties
+# Process each audit record and extract key properties into a custom object
 $ProcessedRecords = $Records | ForEach-Object {
+    # Convert the JSON string in AuditData property to a PowerShell object
     $data = $_.AuditData | ConvertFrom-Json
+    
+    # Create a custom object with relevant extracted information
     [PSCustomObject]@{
-        Time              = $_.CreationDate                          # Timestamp of the access
-        UserId            = $data.UserId                             # User who accessed the item
-        ClientIP          = $data.ClientIPAddress                    # IP address used
-        FolderPath        = $data.Folders[0].Path                    # Folder path where the message resides
-        InternetMessageId = $data.Folders[0].FolderItems[0].InternetMessageId  # Unique message identifier
+        Time              = $_.CreationDate                          # When the message was accessed
+        UserId            = $data.UserId                             # User who accessed the message
+        ClientIP          = $data.ClientIPAddress                    # IP address used to access the message
+        FolderPath        = $data.Folders[0].Path                    # Folder location of the message
+        InternetMessageId = $data.Folders[0].FolderItems[0].InternetMessageId  # Unique email message ID
     }
 }
 
-# Display the results in an interactive grid window
+# Display the results in an interactive window for easy review and filtering
 $ProcessedRecords | Out-GridView -Title "MailItemsAccessed Events - Last 90 Days"
-$ProcessedRecords | select InternetMessageId
+
+# Output the list of InternetMessageId values to the console for reference or further use
+$ProcessedRecords | Select-Object InternetMessageId
